@@ -10,7 +10,7 @@ public class Worker implements Runnable{
     private Semaphore semaphore;
     private String workerName;
     private Cart cart;
-    private boolean isAdder;
+    private boolean isAdder; //true - рабочий наполняет тележку, false - разгружает
 
     public Worker(Semaphore semaphore, String workerName, Cart cart, boolean isAdder) {
         this.semaphore = semaphore;
@@ -24,25 +24,26 @@ public class Worker implements Runnable{
         System.out.println(workerName + " started working...");
         try {
             System.out.println(workerName + " waiting for cart...");
-            //запрашиваем разрешение у семафора
+            //запрашиваем разрешение у семафора, если свободного разрешения нет - ожидаем
             semaphore.acquire();
+
             System.out.println(workerName + " got access to cart...");
             for (int i = 0 ; i < 10 ; i++) {
-                if (!isAdder && cart.getWeight().get()>0) {
+                if (!isAdder && cart.getWeight().get()>0) { //разгружаем тележку, если она не пустая
                     cart.reduceWeight();
                 }
-                else if(!isAdder){
+                else if(!isAdder){  //если пустая - возвращаем разрешение
                     semaphore.release();
                 }
-                else {
+                else {      //наполняем тележку
                     cart.addWeight();
                 }
                 System.out.println(workerName + " changed weight to: " + cart.getWeight());
                 Thread.sleep(10L);
             }
             System.out.println(workerName + " finished working with cart...");
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         } finally {
             //возвращаем разрешение после выполнения лействий с ресурсом
             semaphore.release();

@@ -22,10 +22,14 @@ public class Writer extends Thread {
 
         while (!isStopped) {
             String[] keys = dictionary.getKeys();
+
             for (String key : keys) {
                 String newValue = getNewValueFromDatastore(key);
                 //обновляем запись в словаре с использованием лока на запись
                 dictionary.set(key, newValue);
+
+                System.out.println(this.getName()+ " " + key + " : " + newValue);
+
             }
 
             //изменения будут происходить каждую секунду
@@ -42,7 +46,7 @@ public class Writer extends Thread {
     }
 
     public String getNewValueFromDatastore(String key) {
-        //симулирование добаления записи. Метод может быть реализован в соответствии с требованиями конкретной здачи
+        //симулирование добаления записи. Метод может быть реализован в соответствии с требованиями конкретной задачи
         return "newValue";
     }
 }

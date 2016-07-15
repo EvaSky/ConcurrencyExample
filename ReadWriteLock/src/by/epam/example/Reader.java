@@ -21,6 +21,7 @@ public class Reader extends Thread {
 
         while (!isStopped) {
             String[] keys = dictionary.getKeys();
+
             for (String key : keys) {
                 //чтение из словаря с использованием READ LOCK
                 String value = dictionary.get(key);

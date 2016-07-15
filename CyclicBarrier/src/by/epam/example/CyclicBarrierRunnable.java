@@ -8,11 +8,12 @@ import java.util.concurrent.CyclicBarrier;
  */
 public class CyclicBarrierRunnable implements Runnable {
 
-    CyclicBarrier barrier1 = null;
-    CyclicBarrier barrier2 = null;
+    CyclicBarrier barrier1;
+    CyclicBarrier barrier2;
 
     public CyclicBarrierRunnable(CyclicBarrier barrier1, CyclicBarrier barrier2) {
 
+        //задаем 2 барьера, через которые должен пройти поток
         this.barrier1 = barrier1;
         this.barrier2 = barrier2;
     }

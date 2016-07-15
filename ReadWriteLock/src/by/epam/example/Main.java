@@ -24,15 +24,24 @@ public class Main {
         Reader reader2 = new Reader(dictionary, "Mr. Reader 2");
         Reader reader3 = new Reader(dictionary, "Mr. Reader 3");
 
+        //запускаем потоки
         writer.start();
         reader1.start();
         reader2.start();
         reader3.start();
 
+        //ждем 2 секунды и останавливаем потоки
         Thread.sleep(2000);
         writer.stopWriter();
         reader1.stopReader();
         reader2.stopReader();
         reader3.stopReader();
+
+        //дожидаемся завершения потоков
+        writer.join();
+        reader1.join();
+        reader2.join();
+        reader3.join();
+
     }
 }
