@@ -21,21 +21,16 @@ public class CyclicBarrierRunnable implements Runnable {
     public void run() {
         try {
             Thread.sleep(1000);
-            System.out.println(Thread.currentThread().getName() +
-                    " waiting at barrier 1");
+            System.out.println(Thread.currentThread().getName() + " waiting at barrier 1");
             this.barrier1.await();//ждем прохождения барьера 1
 
             Thread.sleep(1000);
-            System.out.println(Thread.currentThread().getName() +
-                    " waiting at barrier 2");
+            System.out.println(Thread.currentThread().getName() + " waiting at barrier 2");
             this.barrier2.await(); //ждем прохождения барьера 2
 
-            System.out.println(Thread.currentThread().getName() +
-                    " done!");
+            System.out.println(Thread.currentThread().getName() + " done!");
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (BrokenBarrierException e) {
+        } catch (InterruptedException | BrokenBarrierException e) {
             e.printStackTrace();
         }
     }

@@ -16,10 +16,12 @@ public class Consumer extends Thread {
         this.queue = queue;
     }
 
+
+    //метод получает объекты из очереди
     @Override
     public void run() {
         try {
-            do {
+            while(true){
                 Object obj = queue.remove();
                 if(obj == null)
                     break;
@@ -31,7 +33,7 @@ public class Consumer extends Thread {
 
                 System.out.println("[Consumer] Read the element: " + obj.toString());
 
-            } while(true);
+            }
         }
         catch (InterruptedException ex) {
             System.err.println("An InterruptedException was caught: " + ex.getMessage());

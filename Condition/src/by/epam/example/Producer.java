@@ -16,6 +16,7 @@ public class Producer extends Thread {
         this.queue = queue;
     }
 
+    //метод читает слова из файла и добабляет в очередь
     @Override
     public void run() {
         BufferedReader rd = null;
@@ -23,7 +24,8 @@ public class Producer extends Thread {
         try {
             rd = new BufferedReader(new FileReader(FILENAME));
 
-            String inputLine = null;
+            //читаем построчно файл, делим строку на слова и добавляем в очередь
+            String inputLine;
             while((inputLine = rd.readLine()) != null) {
                 String[] inputWords = inputLine.split(" ");
 
@@ -31,7 +33,7 @@ public class Producer extends Thread {
                     queue.add(inputWord);
             }
 
-            //Terminate the execution.
+            //Заканчиваем выполнение
             queue.add(null);
         }
         catch (InterruptedException ex) {

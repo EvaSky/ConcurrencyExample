@@ -8,54 +8,72 @@ import java.util.concurrent.locks.ReentrantLock;
  * Created by Olga Shahray on 13.07.2016.
  */
 public class SharedFifoQueue {
-    private Object[] elems = null;
-    private int current = 0;
-    private int placeIndex = 0;
-    private int removeIndex = 0;
+    private Object[] elems;
+    private int current;
+    private int placeIndex;
+    private int removeIndex;
 
-    private final Lock lock = new ReentrantLock();
-    private final Condition isEmpty = lock.newCondition();
-    private final Condition isFull = lock.newCondition();
+    private final Lock lock;
+    //Создаем 2 переменных условия - когда очередь пуста и заполнена
+    private final Condition isEmpty;
+    private final Condition isFull;
 
     public SharedFifoQueue(int capacity) {
         this.elems = new Object[capacity];
+        this.current = 0;
+        this.placeIndex = 0;
+        this.removeIndex = 0;
+        this.lock = new ReentrantLock();
+        this.isEmpty = lock.newCondition();
+        this.isFull = lock.newCondition();
     }
 
     public void add(Object elem) throws InterruptedException {
+        //блокируем очередь для выполнения операции добавления элемента
         lock.lock();
-        while(current >= elems.length)
-            isFull.await();
 
+        //если текущий индекс превышает размер очереди, значит очередь заполнена и поток оживает
+        while(current >= elems.length) {
+            isFull.await();
+        }
+
+        //после выхода из режима ожидания помещаем элемент в очередь
         elems[placeIndex] = elem;
 
-        //We need the modulo, in order to avoid going out of bounds.
+        //Рассчитываем следующий индекс так, чтобы не выйти за пределы массива
         placeIndex = (placeIndex + 1) % elems.length;
 
         ++current;
 
-        //Notify the consumer that there is data available.
+        //Даем сиглал consumer-потоку, что очередь не пуста
         isEmpty.signal();
 
+        //снимаем блокировку
         lock.unlock();
     }
 
     public Object remove() throws InterruptedException {
         Object elem = null;
 
+        //блокируем очередь для удаления элемента
         lock.lock();
+
+        //если текущий индекс меньше нуля, значит очередь пуста и поток оживает
         while(current <= 0)
             isEmpty.await();
 
+        //после выхода из режима ожидания получаем элемент
         elem = elems[removeIndex];
 
-        //We need the modulo, in order to avoid going out of bounds.
+        //Рассчитываем следующий индекс так, чтобы не выйти за пределы массива
         removeIndex = (removeIndex + 1) % elems.length;
 
         --current;
 
-        //Notify the producer that there is space available.
+        //Даем сиглал producer-потоку, что очередь не полностью заполнена
         isFull.signal();
 
+        //снимаем блокировку
         lock.unlock();
 
         return elem;

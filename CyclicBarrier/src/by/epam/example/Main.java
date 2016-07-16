@@ -18,6 +18,9 @@ import java.util.concurrent.CyclicBarrier;
 public class Main {
 
     public static void main(String[] args) {
+
+        //задаем 2 опциональных действия, которые должны быть выполнены после того как все потоки встретились
+        //но перед тем как барьер будет сломлен
         Runnable barrier1Action = () -> System.out.println("BarrierAction 1 executed ");
         Runnable barrier2Action = () -> System.out.println("BarrierAction 2 executed ");
 

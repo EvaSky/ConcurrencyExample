@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Olga Shahray on 13.07.2016.
  *
- *
+ *Класс Worker эмулирует работу какого-либо рабочего процесса. Имя процесса передается в конструкторе
  */
 public class Worker implements Runnable{
 
